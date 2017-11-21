@@ -1,0 +1,42 @@
+{% extends 'shop/base.html' %}
+
+{% load staticfiles %}
+{% load static %}
+
+{% block title %}
+  Книга - "{{ object }}"
+{% endblock %}
+
+
+{% block content %}
+    <div class="col-sm-4">
+    {% if object.image %}
+        <img src="{{ object.image.url }}" height="300" width="250" alt=""> <br>
+    {% else %}
+        <img src="{% static 'shop/images/NoImageFound.jpg' %}" height="300" width="250" alt=""> <br>
+    {% endif %}
+    </div>
+
+    <div id="sidebar" class="col-sm-3">
+        <h3>{{ object.name }}</h3>
+        Автор:
+        <a href={{ object.author.get_absolute_url }}>
+            {{ object.author }}
+        </a> <br>
+        Жанр:
+        <a href={{ object.category.get_absolute_url }}>
+            {{ object.category }}
+        </a> <br>
+        Рік видання: {{ object.year_of_published }} <br>
+        Вартість: {{ object.price }} грн <br>
+        К-сть товару на складі: {{ object.count }} <br>
+        <form action="{% url "cart:AddProductToCart" object.id %}" method="post" class="add">
+            {% csrf_token %}
+            {{ cart_product_form.as_p }}
+            <input type="submit" value="Добавити в корзину">
+        </form>
+        Опис <br>
+        {{ object.description }} <br>
+        Here should be some information about certain book
+    </div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+
+    ACCOUNT PAGE
+    <p>
+        {{ user.email }}
+        {{ user.name }}
+        {{ user.surname }}
+    </p>
+
+    <a href="{% url 'account:AccountUpdate' pk=user.pk %}">Update</a>
+
+{% endblock %}

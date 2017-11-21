@@ -1,0 +1,70 @@
+{% extends 'shop/base.html' %}
+
+
+{% block title %}
+  BuyBook
+{% endblock %}
+
+{% load static %}
+{% block content %}
+	<main>
+		<div class="leftBlcok">
+			<div class="categoriesBlock">
+				<p>Категорії</p>
+                    {% for cat in categories %}
+                        <p {% if category.id == cat.id %} class="selected" {% endif %}>
+                            <a href={{ cat.get_absolute_url }}>
+                            {{ cat.name }}
+                            </a>
+                        </p>
+                    {% endfor %}
+			</div>
+			<div class="filterBlock"></div>
+		</div>
+		<div class="centralBlock">
+			<div class="topBlock">
+				<div class="titleBlock">
+                    <p> {% if category %}{{ category.name }}{% else %}Книги{% endif %} </p>
+				</div>
+				<div class="sortBlock">
+					<p>новинки</p>
+					<p>популярність</p>
+					<p>рейтинг</p>
+					<p>ціна +</p>
+					<p>ціна -</p>
+				</div>
+			</div>
+            <div class="mainBook">
+                {% for product in products %}
+                    <div class="bookBox">
+                        <a href={{ product.get_absolute_url }}>
+                            {% if product.image %}
+                                <img src="{{ product.image.url }}" height="200" width="200" alt=""> <br>
+                            {% else %}
+                                <img src="{% static 'shop/images/NoImageFound.jpg' %}" height="200" width="200" alt="">
+                                <br>
+                            {% endif %}
+                        </a> <br>
+                        <p> <a href={{ product.get_absolute_url }}> {{ product.name }} </a> </p>
+                        <p> {{ product.price }} грн </p>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if products.has_previous %}
+                        <a href="?page={{ products.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ products.number }} of {{ products.paginator.num_pages }}.
+                    </span>
+
+                    {% if products.has_next %}
+                        <a href="?page={{ products.next_page_number }}">next</a>
+                    {% endif %}
+                </span>
+            </div>
+		</div>
+	</main>
+{% endblock %}

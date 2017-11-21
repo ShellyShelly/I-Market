@@ -1,0 +1,63 @@
+{% extends 'shop/base.html' %}
+
+{% load static %}
+
+
+{% block title %}
+  Автор - {{ object }}
+{% endblock %}
+
+
+{% block content %}
+
+    <div id="sidebar" class="col-sm-3">
+        <h3>{{ object }}</h3>
+            <strong> Роки життя: </strong> <br>
+            {% if object.year_of_birth %}
+                {{ object.year_of_birth }} -
+                {% if object.year_of_birth %}
+                    {{ object.year_of_birth }}
+                {% else %}
+                    дотепер
+                {% endif %}
+            {% else %}
+                невідомі
+            {% endif %} <br>
+            <strong> Біографія </strong> <br>
+            {{ object.biography }}
+            <p><strong>Книги автора:</strong></p>
+        {% if related_products %}
+            {% for product in related_products %}
+                <div class="bookBox">
+                    <a href={{ product.get_absolute_url }}>
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" height="200" width="200" alt=""> <br>
+                        {% else %}
+                            <img src="{% static 'shop/images/NoImageFound.jpg' %}" height="200" width="200" alt="">
+                            <br>
+                        {% endif %}
+                    </a> <br>
+                    <p> <a href={{ product.get_absolute_url }}> {{ product.name }} </a> </p>
+                    <p> {{ product.price }} грн </p>
+                </div>
+            {% endfor %}
+            <div class="pagination">
+                <span class="step-links">
+                    {% if related_products.has_previous %}
+                        <a href="?page={{ related_products.previous_page_number }}">previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ related_products.number }} of {{ related_products.paginator.num_pages }}.
+                    </span>
+
+                    {% if related_products.has_next %}
+                        <a href="?page={{ related_products.next_page_number }}">next</a>
+                    {% endif %}
+                </span>
+            </div>
+        {% else %}
+            <strong> На даний момент в нашому магазині не добавлено книг автора:)</strong>
+        {% endif %}
+          </div>
+{% endblock %}

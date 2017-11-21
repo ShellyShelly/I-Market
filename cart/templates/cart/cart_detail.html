@@ -1,0 +1,84 @@
+{% extends "shop/base.html" %}
+
+{% load static %}
+
+{% block title %}
+  Корзина товарів --- {{ user.get_username }}
+{% endblock %}
+
+{% block content %}
+    <h1>Ваша корзина товарів</h1>
+    {% if cart.cart %}
+        <a href="{% url "cart:ClearCart" %}">
+            Очистити корзину
+        </a>
+        <table class="table-cart" border="1px">
+            <thead>
+                <tr>
+                    <th>Зображення</th>
+                    <th>Товар</th>
+                    <th>К-сть</th>
+                    <th>Видалити</th>
+                    <th>Ціна</th>
+                    <th>Повна вартість</th>
+                </tr>
+            </thead>
+            <tbody>
+                 {% for item in cart %}
+                    {% with product=item.product %}
+                    <tr>
+                        <td class="cart-img">
+                            <a href="{{ product.get_absolute_url }}">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" height="300" width="250" alt=""> <br>
+                                {% else %}
+                                    <img src="{% static 'shop/images/NoImageFound.jpg' %}" height="300" width="250" alt=""> <br>
+                                {% endif %}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ product.get_absolute_url }}">
+                                "{{ product }}"
+                            </a>
+                            <a href="{{ product.author.get_absolute_url }}">
+                                "{{ product.author }}"
+                            </a>
+                        </td>
+                        <td>
+                            <form action="{% url "cart:AddProductToCart" product.id %}" method="post" class="add">
+                                {% csrf_token %}
+                                {{ item.update_quantity_form.quantity }}
+                                {{ item.update_quantity_form.update }}
+                                <input type="submit" value="Обновити">
+                            </form>
+                        </td>
+                        <td>
+                            <a href="{% url "cart:RemoveProductFromCart" product.id %}">Видалити</a>
+
+                        </td>
+                        <td>
+                            {{ product.price }}
+                        </td>
+                        <td>
+                            {{ item.total_price }}
+                        </td>
+                    </tr>
+                    {% endwith %}
+                {% endfor %}
+                    <tr class="total">
+                        <td>Всього: </td>
+                        <td colspan="4"></td>
+                        <td class="num">{{ cart.get_total_price|floatformat:"2" }} грн</td>
+                    </tr>
+            </tbody>
+        </table>
+        <p class="text-right">
+            <a href="" class="btn btn-light">Підтвердити покупку</a>
+            </p>
+    {% else %}
+        В вашій корзині нема товарів
+    {% endif %}
+    <p class="text-right">
+        <a href="{% url "shop:ProductList"%}" class="btn btn-light">Продовжити покупки</a>
+    </p>
+{% endblock %}

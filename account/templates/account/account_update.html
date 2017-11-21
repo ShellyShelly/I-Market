@@ -1,0 +1,12 @@
+{% extends "shop/base.html" %}
+
+{% block content %}
+
+    ACCOUNT PAGE
+
+    <form action="" method="post">{% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Update" />
+    </form>
+
+{% endblock %}

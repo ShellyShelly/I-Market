@@ -1,0 +1,48 @@
+{% extends "shop/base.html" %}
+
+{% load static %}
+
+{% block title %}
+  Search
+{% endblock %}
+
+{% block content %}
+    {% if message %}
+        {{ message }}
+    {% else %}
+        <p> You searched for "{{ query }}"; the results are listed below.</p>
+        <p> Функція Пошук працює в тестовому режимі, тому, будь-ласка, зверніть увагу на регістр букв в пошуковому запиті.
+        Найближчим часом функціонал буде розширений:)</p>
+        <div class="mainBook">
+             {% for object in object_list %}
+                 <div class="bookBox">
+                     <a href={{ object.get_absolute_url }}>
+                         {% if object.image %}
+                             <img src="{{ object.image.url }}" height="200" width="200" alt=""> <br>
+                         {% else %}
+                             <img src="{% static 'shop/images/NoImageFound.jpg' %}" height="200" width="200" alt="">
+                             <br>
+                         {% endif %}
+                     </a> <br>
+                     <p> <a href={{ object.get_absolute_url }}> {{ object.name }} </a> </p>
+                     <p> {{ object.price }} грн </p>
+                 </div>
+             {% endfor %}
+         </div>
+        <div class="pagination">
+            <span class="step-links">
+                {% if object_list.has_previous %}
+                    <a href="?page={{ object_list.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+                </span>
+
+                {% if object_list.has_next %}
+                    <a href="?page={{ object_list.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+{% endblock %}

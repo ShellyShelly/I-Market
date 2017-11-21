@@ -1,0 +1,61 @@
+{% load static %}
+<!DOCTYPE html>
+
+<html lang="ua">
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}{% endblock %}</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+  <link rel="stylesheet" href="{% static "shop/css/style.css" %}">
+  <link href="https://fonts.googleapis.com/css?family=Pacifico|Rubik" rel="stylesheet">
+
+  <!--[if lt IE 9]>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+  <![endif]-->
+</head>
+
+<body>
+	<header>
+		<div class="mainHeader">
+			<div class="logo">
+				<a href='/shop/'> buybook </a>
+			</div>
+			<div class="div searchBlock">
+				<div class="searchIns">
+					<form method="GET" action="{% url 'search:SearchedInfo' %}">
+                        <input type="text" name="query" placeholder="Search products">
+                        <img src="{% static 'shop/images/search.svg' %}" height="20" width="20" alt="">
+                    </form>
+				</div>
+			</div>
+            <div class="loginBlock">
+                {% if user.is_authenticated %}
+                    {%  if user.pk %}
+                        You are currently logged in as <a href="{% url 'account:AccountDetail'  pk=user.pk %}">{{ user.email }}</a>, not you? <a href="{% url 'account:Logout' %}">Logout</a>
+                    {%  endif %}
+                {% else %}
+                    <a href="{% url 'account:SignUp' %}">Register/Sign Up </a> or <a href="{% url 'account:Login' %}"> Login</a>
+                {% endif %}
+                <a href=""><img src="{% static 'shop/images/man.svg' %}" height="50" width="50" alt=""></a>
+            </div>
+			<div class="basketBox">
+                {% with total_items=cart|length %}
+                    {% if cart|length > 0 %}
+                        Ваша корзина:
+                            {{ total_items }} тов. {{ cart.get_total_price }} грн
+                    {% else %}
+                        Корзина пуста
+                    {% endif %}
+                {% endwith %}
+			    <a href="{% url "cart:CartDetail" %}">
+                    <img src="{% static 'shop/images/cart.svg' %}" height="50" width="50" alt="">
+                </a>
+            </div>
+        </div>
+	</header>
+
+    {% block content %} {% endblock %}
+
+</body>
+</html>

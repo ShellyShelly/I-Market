@@ -2,69 +2,139 @@
 
 
 {% block title %}
-  BuyBook
+  Bookland
 {% endblock %}
 
 {% load static %}
 {% block content %}
+
 	<main>
-		<div class="leftBlcok">
-			<div class="categoriesBlock">
-				<p>Категорії</p>
-                    {% for cat in categories %}
-                        <p {% if category.id == cat.id %} class="selected" {% endif %}>
-                            <a href={{ cat.get_absolute_url }}>
-                            {{ cat.name }}
-                            </a>
-                        </p>
-                    {% endfor %}
-			</div>
-			<div class="filterBlock"></div>
-		</div>
-		<div class="centralBlock">
-			<div class="topBlock">
-				<div class="titleBlock">
-                    <p> {% if category %}{{ category.name }}{% else %}Книги{% endif %} </p>
-				</div>
-				<div class="sortBlock">
-					<p>новинки</p>
-					<p>популярність</p>
-					<p>рейтинг</p>
-					<p>ціна +</p>
-					<p>ціна -</p>
-				</div>
-			</div>
-            <div class="mainBook">
+		<div class="leftMain">
+            <div class="cgBlock">
+        	    <div class="titleCg">
+        			<p>Категорії</p>
+        		</div>
+                {% for cat in categories %}
+                    <div class="nameCg">
+        		    	<a href={{ cat.get_absolute_url }}>
+        		    		{{ cat.name }}
+        		    	</a>
+                    </div>
+                {% endfor %}
+                <div class="filterBlock">
+                    <div class="titleFlt">
+                        <p>Фільтр</p>
+                    </div>
+                    <div class="filterPrice">
+                        <p>Ціна:</p>
+                        <div id="slider-range"></div>
+                        <div class="priceRange">
+                            <input type="text" id="amount" readonly = "readonly">
+                            <input type="text" id="amountRight" readonly = "readonly">
+                        </div>
+                    </div>
+                    <div class="datePicker">
+                        <div class="dateTitle">
+                            <p>Рік видання:</p>
+                        </div>
+                        <div class="dateSelect">
+                            <p>Від</p>
+                            <select class="fromSelect" name="">
+                                <option value="">2009</option>
+                                <option value="">2017</option>
+                                <option value="">2016</option>
+                                <option value="">2015</option>
+                                <option value="">2014</option>
+                                <option value="">2013</option>
+                                <option value="">2012</option>
+                                <option value="">2011</option>
+                                <option value="">2010</option>
+                            </select>
+                            <p>До</p>
+                            <select class="toSelect" name="">
+                                <option value="">2017</option>
+                                <option value="">2016</option>
+                                <option value="">2015</option>
+                                <option value="">2014</option>
+                                <option value="">2013</option>
+                                <option value="">2012</option>
+                                <option value="">2011</option>
+                                <option value="">2010</option>
+                                <option value="">2009</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="rightMain">
+            <div class="topMain">
+                <div class="titleMain">
+                    <p>{% if category %}{{ category.name }}{% else %}Книги{% endif %}</p>
+                </div>
+                <div class="sortBlock">
+                    <a href="#">
+                        <li>Новинки</li>
+                    </a>
+                    <a href="#">
+                        <li>Популярність</li>
+                    </a>
+                    <a href="#">
+                        <li>Рейтинг</li>
+                    </a>
+                    <a href="#">
+                        <li>Ціна<img src='{% static '/shop/images/up-arrow.svg' %}' width='11px' height='11px'></li>
+                    </a>
+                    <a href="#">
+                        <li>Ціна<img src='{% static '/shop/images/down-arrow.svg' %}' width='11px' height='11px'></li>
+                    </a>
+                </div>
+            </div>
+
+            <div class="centralBook">
                 {% for product in products %}
-                    <div class="bookBox">
+                    <div class="bookBlock">
                         <a href={{ product.get_absolute_url }}>
-                            {% if product.image %}
-                                <img src="{{ product.image.url }}" height="200" width="200" alt=""> <br>
-                            {% else %}
-                                <img src="{% static 'shop/images/NoImageFound.jpg' %}" height="200" width="200" alt="">
-                                <br>
-                            {% endif %}
+                            <div class="imgBlock">
+                                {% if product.image %}
+                                    <img src="{{ product.image.url }}" height="200" width="200" alt=""> <br>
+                                {% else %}
+                                    <img src="{% static 'shop/images/NoImageFound.jpg' %}" height="200" width="200" alt="">
+                                    <br>
+                                {% endif %}
+                            </div>
                         </a> <br>
-                        <p> <a href={{ product.get_absolute_url }}> {{ product.name }} </a> </p>
-                        <p> {{ product.price }} грн </p>
+                        <div class="nameBook">
+                            <h3>{{ product.name }}</h3>
+                        </div>
+
+                        <div class="buyBookButt">
+                            <form action="">
+  						        <button>
+  							        <p>Купити</p>
+  						        </button>
+  					        </form>
+                            <div class="price">
+                                <p>{{ product.price }} грн</p>
+  					        </div>
+  				        </div>
                     </div>
                 {% endfor %}
             </div>
+
             <div class="pagination">
                 <span class="step-links">
                     {% if products.has_previous %}
                         <a href="?page={{ products.previous_page_number }}">previous</a>
                     {% endif %}
-
                     <span class="current">
                         Page {{ products.number }} of {{ products.paginator.num_pages }}.
                     </span>
-
                     {% if products.has_next %}
                         <a href="?page={{ products.next_page_number }}">next</a>
                     {% endif %}
                 </span>
             </div>
-		</div>
+        </div>
 	</main>
 {% endblock %}

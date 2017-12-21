@@ -1,6 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import ReadOnlyPasswordHashField, AuthenticationForm
-from django.views.generic import UpdateView
+from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from .models import User
 
@@ -46,7 +45,7 @@ class UserForm(forms.ModelForm):
 
     class Meta:
         model = User
-        exclude = ['is_confirmed', 'staff', 'admin', 'active']
+        exclude = ['is_confirmed', 'staff', 'admin', 'active', 'confirmation_date', 'last_login']
 
 
 class UserAdminCreationForm(forms.ModelForm):

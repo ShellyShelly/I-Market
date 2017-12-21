@@ -2,6 +2,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from shop import urls as shop_urls
 from cart import urls as cart_urls
+from order import urls as order_urls
 from search import urls as search_urls
 from account import urls as account_urls
 from IMarket import settings
@@ -12,6 +13,7 @@ urlpatterns = [
     url(r'^cart/', include(cart_urls, namespace='cart')),
     url(r'^search/', include(search_urls, namespace='search')),
     url(r'^account/', include(account_urls, namespace='account')),
+    url(r'^order/', include(order_urls, namespace='order')),
 ]
 
 if settings.DEBUG:

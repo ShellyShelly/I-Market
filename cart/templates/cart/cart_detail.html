@@ -8,6 +8,9 @@
 
 {% block content %}
     <h1>Ваша корзина товарів</h1>
+    {% if error_message %}
+        {{ error_message }}
+    {% endif %}
     {% if cart.cart %}
         <a href="{% url "cart:ClearCart" %}">
             Очистити корзину
@@ -45,6 +48,9 @@
                             </a>
                         </td>
                         <td>
+
+                            {{ item.error_msg }}
+
                             <form action="{% url "cart:AddProductToCart" product.id %}" method="post" class="add">
                                 {% csrf_token %}
                                 {{ item.update_quantity_form.quantity }}
@@ -72,9 +78,9 @@
                     </tr>
             </tbody>
         </table>
-        <p class="text-right">
-            <a href="" class="btn btn-light">Підтвердити покупку</a>
-            </p>
+
+            <a href="{% url "order:MakeOrder" %}" class="btn btn-light">Підтвердити покупку</a>
+
     {% else %}
         В вашій корзині нема товарів
     {% endif %}

@@ -1,9 +1,10 @@
+from datetime import datetime
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.shortcuts import render, redirect
 from django.core.mail import EmailMessage
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
 from django.views import View
 from django.contrib import auth
 from django.template.context_processors import csrf
@@ -20,6 +21,9 @@ from account.models import User
 
 # helper method to generate a context csrf_token
 # and adding a login form in this context
+from order.models import Order, OrderedItem
+
+
 def create_context_username_csrf(request):
     context = {}
     context.update(csrf(request))
@@ -52,6 +56,7 @@ class LoginView(View):
     def get(self, request):
         # if the user is logged in, then do a redirect to the home page
         if auth.get_user(request).is_authenticated:
+            auth.get_user_model().last_login = datetime.now()
             return redirect('shop:ProductList')
         else:
             # Otherwise, form a context with the authorization form
@@ -75,6 +80,7 @@ class LoginView(View):
             else:
                 # if successful authorizing user
                 auth.login(request, user)
+                auth.get_user_model().last_login = datetime.now()
                 #  and if the user of the number of staff and went through url /admin/login/
                 # then redirect the user to the admin panel
                 if request.user.is_staff or request.user.is_admin:
@@ -88,12 +94,12 @@ class LoginView(View):
 
 
 class SignupView(View):
-
     def post(self, request):
-        form = UserSignUpForm(request.POST)
+        form = UserSignUpForm(request.POST or None)
         if form.is_valid():
             user = form.save(commit=False)
             user.active = False
+            user.confirmation_date = datetime.now()
             user.save()
             current_site = get_current_site(request)
             message = render_to_string('account/account_activation_email.html', {
@@ -120,6 +126,31 @@ class AccountDetailView(DetailView):
     model = User
     template_name = 'account/account_detail.html'
 
+    def get_context_data(self, **kwargs):
+        orders = Order.objects.filter(user=self.request.user, is_confirmed=True)
+        ordered_items = []
+        for order in orders:
+            items = OrderedItem.objects.filter(order=order)
+            ordered_items.append(items)
+
+        context = super(AccountDetailView, self).get_context_data()
+        context['orders'] = orders
+        context['ordered_items'] = ordered_items
+
+        paginator = Paginator(context['orders'], 3)
+        page_request_var = "page"
+        page = self.request.GET.get(page_request_var)
+        try:
+            queryset = paginator.page(page)
+        except PageNotAnInteger:
+            queryset = paginator.page(1)
+        except EmptyPage:
+            queryset = paginator.page(paginator.num_pages)
+
+        context['orders'] = queryset
+        context['page_request_var'] = page_request_var
+        return context
+
     def get_object(self, queryset=None):
         try:
             user = User.objects.get(pk=queryset)
@@ -129,7 +160,7 @@ class AccountDetailView(DetailView):
 
 class AccountUpdateView(UpdateView):
     model = User
-    template_name= 'account/account_update.html'
+    template_name = 'account/account_update.html'
     form_class = UserForm
 
     def get_object(self, queryset=None):

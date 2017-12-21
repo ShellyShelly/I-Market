@@ -18,10 +18,12 @@ class UserAdmin(BaseUserAdmin):
     list_display = ('email', 'name', 'surname', 'admin', 'staff', 'active')
     list_filter = ('admin',  'staff', 'active',)
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('name', 'surname', 'address')}),
+        (None, {'fields': ('email', 'password', 'mobile')}),
+        ('Account info', {'fields': ('confirmation_date', 'last_login')}),
+        ('Personal info', {'fields': ('name', 'surname', 'address', 'city', 'country', 'postal_code')}),
         ('Permissions', {'fields': ('admin', 'staff', 'active')}),
     )
+    readonly_fields = ('last_login', 'confirmation_date')
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
     add_fieldsets = (

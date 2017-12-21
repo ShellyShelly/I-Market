@@ -1,7 +1,8 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView, DetailView
+
 from .models import Book, Category, Author
-from django.views.generic import TemplateView, ListView, DetailView
 from cart.forms import AddProductToCartForm
 
 """
@@ -127,7 +128,6 @@ class AuthorDetailView(DetailView):
         context['object'] = get_object_or_404(Author, pk=self.kwargs['pk'])
         related_products = Book.objects.filter(author=context['object'])
 
-        queryset = ''
         paginator = Paginator(related_products, 2)
         page_request_var = "page"
         page = self.request.GET.get(page_request_var)

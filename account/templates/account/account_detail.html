@@ -7,8 +7,48 @@
         {{ user.email }}
         {{ user.name }}
         {{ user.surname }}
+        {{ user.mobile }}
+        {{ user.address }}
+        {{ user.city }}
+        {{ user.country }}
+        {{ user.postal_code }}
+        {{ user.confirmation_date }}
     </p>
 
     <a href="{% url 'account:AccountUpdate' pk=user.pk %}">Update</a>
+
+    <div>
+        Orders<br><br>
+        {% if orders %}
+            {% for order in orders %}
+                Замовлення за : {{ order.date_of_creation }}
+                {% for ordered_item in ordered_items %}
+                    {% for item in ordered_item %}
+                        {% if item.order.pk == order.pk %}
+                            <p>
+                                <a href={{ item.product.get_absolute_url }}>{{ item.product.name }}</a> <br>
+                                {{ item.price }} <br>
+                                {{ item.quantity }} <br>
+                            </p>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+                <br><br>
+            {% endfor %}
+        {% endif %}
+        <div class="pagination">
+            <span class="step-links">
+                {% if orders.has_previous %}
+                    <a href="?page={{ orders.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="current">
+                    Page {{ orders.number }} of {{ orders.paginator.num_pages }}.
+                </span>
+                {% if orders.has_next %}
+                    <a href="?page={{ orders.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
+    </div>
 
 {% endblock %}

@@ -1,12 +1,9 @@
-from time import timezone
 from django.db import models
-from django.core.mail import send_mail
 from django.contrib.auth.models import (
     BaseUserManager, AbstractBaseUser
 )
 
 
-# not done yet!
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, name=None, surname=None, address=None,
                     is_active=True, is_staff=False, is_admin=False, is_confirmed=False):
@@ -63,18 +60,22 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     name        = models.CharField(max_length=255, blank=True, null=True)
     surname     = models.CharField(max_length=255, blank=True, null=True)
-    address     = models.CharField(max_length=255, blank=True, null=True)
+    country = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    postal_code = models.CharField(verbose_name='Postal code', max_length=20, default='76000', blank=True, null=True)
     email       = models.EmailField(
                 verbose_name='email',
                 max_length=255,
                 unique=True,
                 )
+    mobile = models.CharField(max_length=12, blank=True, null=True)
     active      = models.BooleanField(default=True) # can login
     staff       = models.BooleanField(default=False)  # is an admin user; non super-user
     admin       = models.BooleanField(default=False)  # is a superuser
     is_confirmed   = models.BooleanField(default=False)  # is account confirmed
-    # confirmation_date = models.DateTimeField()  # date and time of email(account at general) confirmation
-    # last_login     = models.DateTimeField(auto_now_add=True)  # date and time of last login
+    confirmation_date = models.DateTimeField()  # date and time of email(account at general) confirmation
+    last_login     = models.DateTimeField(auto_now_add=True)  # date and time of last login
     # "Password field" built in.
 
     objects = UserManager()

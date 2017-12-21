@@ -1,13 +1,14 @@
 {% extends "shop/base.html" %}
 
 {% block content %}
-  <h2>Sign up</h2>
-{% if signup_form %}
-  <form action="{% url 'account:SignUp' %}" method="post">
-      {% csrf_token %}
-      {{ signup_form }}
-      <input type="submit" value="Sign Up" />
 
-  </form>
-{% endif %}
+            <h2>Sign up</h2>
+            {% if signup_form %}
+                <form action="{% url 'account:SignUp' %}" method="post">
+                    {% csrf_token %}
+                    {{ signup_form }}
+                    <input type="submit" value="Sign Up" />
+                </form>
+            {% endif %}
+
 {% endblock %}

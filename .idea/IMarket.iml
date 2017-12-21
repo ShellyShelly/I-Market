@@ -23,6 +23,7 @@
         <option value="$MODULE_DIR$/shop/templates" />
         <option value="$MODULE_DIR$/search/templates" />
         <option value="$MODULE_DIR$/account/templates" />
+        <option value="$MODULE_DIR$/order/templates" />
       </list>
     </option>
   </component>

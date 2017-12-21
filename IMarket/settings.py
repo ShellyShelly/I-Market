@@ -1,4 +1,8 @@
 import os
+
+import datetime
+from django.utils import timezone
+
 from account.email_info import email_use_tls, email_host, email_host_user, email_port, email_host_password
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -38,6 +42,7 @@ INSTALLED_APPS = [
     'search.apps.SearchConfig',
     'account.apps.AccountConfig',
     'django.contrib.auth',
+    'order.apps.OrderConfig'
 ]
 
 MIDDLEWARE = [

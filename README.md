@@ -1,6 +1,6 @@
 # I-Market
 
-Simple Online Shop for selling books(easily can be modified for selling another products).
+Simple Online Shop for selling books and can be easily modified to sale other products.
 This project was created for learning / demo purposes(university project).
 
 
@@ -23,7 +23,6 @@ add later(url on site with working project)
 - Mailing (Order Confirmation and Account Activation)
 
 
-# Dependencies 
+# Dependencies
 
  fill later
-
